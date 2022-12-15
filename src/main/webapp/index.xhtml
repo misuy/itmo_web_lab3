@@ -12,11 +12,14 @@
     <script src="https://cdn.anychart.com/releases/8.11.0/js/graphics.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Roboto" rel="stylesheet"/>
     <link href="resources/css/header_style.css" rel="stylesheet"/>
-    <link href="resources/css/index_style.css?v=2" rel="stylesheet"/>
+    <link href="resources/css/index_style.css?v=4" rel="stylesheet"/>
     <h:outputScript library="primefaces" name="jquery/jquery.js"/>
 </h:head>
 <h:body>
     <ui:include src="header.xhtml"/>
+    <div id="link-holder">
+        <h:link styleClass="clock-link" outcome="to start">посмотреть часики</h:link>
+    </div>
     <c:if test="#{pageControllerBean.focusedAttemptBean.focusedAttempt != null}">
         <div id="hidden-focused-x-holder">
             <h:inputHidden value="${pageControllerBean.focusedAttemptBean.focusedAttempt.dot.x}"/>
@@ -41,34 +44,30 @@
             <td id="selectors-cell">
                 <div id="selectors-holder" class="centered-holder">
                     <h:form>
-                        <p:fieldset>
-                            <div id="x-input-holder">
-                                <p:outputLabel value="X:"/>
-                                <p:spinner value="#{pageControllerBean.currentAttemptBean.dot.x}" min="-5" max="5" stepFactor="0.1">
-                                    <f:validateRequired/>
-                                    <f:validateDoubleRange minimum="-5" maximum="5"/>
-                                </p:spinner>
-                            </div>
-                        </p:fieldset>
-                        <p:fieldset>
-                            <div id="y-input-holder">
-                                <p:outputLabel value="Y:"/>
-                                <p:inputText value="#{pageControllerBean.currentAttemptBean.dot.y}">
-                                    <f:validateRequired/>
-                                    <f:validateDoubleRange minimum="-3" maximum="5"/>
-                                </p:inputText>
-                            </div>
-                        </p:fieldset>
-                        <p:fieldset>
-                            <div id="r-input-holder">
-                                <p:outputLabel value="R:"/>
-                                <p:spinner value="#{pageControllerBean.currentAttemptBean.dot.r}" min="1" max="3" stepFactor="0.5">
-                                    <f:validateRequired/>
-                                    <f:validateDoubleRange minimum="1" maximum="3"/>
-                                </p:spinner>
-                            </div>
-                        </p:fieldset>
-                        <p:commandButton value="ok" ajax="false" action="#{pageControllerBean.addCurrentAttempt()}"/>
+                        <div id="x-input-holder" class="input-holder">
+                            <p:outputLabel value="X:"/>
+                            <p:spinner value="#{pageControllerBean.currentAttemptBean.dot.x}" min="-5" max="5" stepFactor="0.1">
+                                <f:validateRequired/>
+                                <f:validateDoubleRange minimum="-5" maximum="5"/>
+                            </p:spinner>
+                        </div>
+                        <div id="y-input-holder" class="input-holder">
+                            <p:outputLabel value="Y:"/>
+                            <p:inputText value="#{pageControllerBean.currentAttemptBean.dot.y}">
+                                <f:validateRequired/>
+                                <f:validateDoubleRange minimum="-3" maximum="5"/>
+                            </p:inputText>
+                        </div>
+                        <div id="r-input-holder" class="input-holder">
+                            <p:outputLabel value="R:"/>
+                            <p:spinner value="#{pageControllerBean.currentAttemptBean.dot.r}" min="1" max="3" stepFactor="0.5">
+                                <f:validateRequired/>
+                                <f:validateDoubleRange minimum="1" maximum="3"/>
+                            </p:spinner>
+                        </div>
+                        <div id="ok-button-holder" class="input-holder">
+                            <p:commandButton value="ok" ajax="false" action="#{pageControllerBean.addCurrentAttempt()}"/>
+                        </div>
                     </h:form>
                 </div>
             </td>
@@ -78,7 +77,7 @@
     <h:dataTable value="#{pageControllerBean.attemptsBean.allAttempts}" var="attempt" styleClass="data-table">
         <h:column>
             <f:facet name="header">id</f:facet>
-            <p:commandButton styleClass="data-table-cell" value="${attempt.id}" ajax="false" action="#{pageControllerBean.focusedAttemptBean.updateFocusedAttempt(attempt.id)}"/>
+            <p:commandButton styleClass="data-table-cell data-table-id-button" value="${attempt.id}" ajax="false" action="#{pageControllerBean.focusedAttemptBean.updateFocusedAttempt(attempt.id)}"/>
         </h:column>
         <h:column>
             <f:facet name="header">x</f:facet>

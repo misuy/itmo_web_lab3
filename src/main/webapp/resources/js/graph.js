@@ -1,5 +1,5 @@
 const firstColor = "black"
-const secondColor = "white"
+const secondColor = "rgba(33, 150, 243, 0.7)"
 
 const stage = acgraph.create("graph-holder")
 
@@ -29,7 +29,7 @@ function parse_r_val() {
 }
 
 function parse_result_val() {
-    if (x_focused_input != null) return x_focused_input.value === "true";
+    if (result_focused_input != null) return result_focused_input.value === "true";
     return null
 }
 
@@ -115,18 +115,28 @@ function drawShape(stage, width, height, xMiddle, yMiddle, r) {
     linePath.lineTo(xMiddle, yMiddle)
     linePath.lineTo(xMiddle, yMiddle-r/2)
 
-    linePath.stroke(firstColor)
+    linePath.stroke(secondColor)
+    linePath.fill(secondColor)
 }
 
 
 function drawAttempt(stage, width, height, xMiddle, yMiddle, r, result) {
     console.log(result)
+    console.log(result.result)
+    let color;
+    if (result.result) color = "rgba(3, 252, 107, 1)"
+    else color = "black"
     if (result !== 0) {
-        stage.circle(xMiddle + (result.x / result.r) * r, yMiddle - (result.y / result.r) * r, 2).stroke(firstColor).fill(firstColor)
+        stage.circle(xMiddle + (result.x / result.r) * r, yMiddle - (result.y / result.r) * r, 2).stroke(color).fill(color)
         console.log("yep")
     }
 }
 
+function getR() {
+    const width = document.getElementById("graph-holder").clientWidth
+    const height = document.getElementById("graph-holder").clientHeight
+    return Math.min(width, height) * 0.4
+}
 
 function plotGraph() {
     stage.removeChildren()
@@ -143,7 +153,16 @@ function plotGraph() {
 
     drawShape(stage, width, height, xMiddle, yMiddle, r)
 
+    getAttempts()
     drawAttempt(stage, width, height, xMiddle, yMiddle, r, getFocusedAttempt())
+}
+
+function getAttempts() {
+    let data = $("table.data-table tbody")
+    console.log(data)
+    for (let row in data.children()) {
+        console.log(row)
+    }
 }
 
 function getFocusedAttempt() {
@@ -153,7 +172,8 @@ function getFocusedAttempt() {
 }
 
 window.onload = function() {
-    plotGraph
-    stage.addEventListener("click", handle_graph_click, false);
+    plotGraph();
+    document.getElementById("graph-holder").addEventListener("click", handle_graph_click);
+    stage.addEventListener("click", handle_graph_click)
 }
 window.onresize = plotGraph

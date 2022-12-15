@@ -1,24 +1,21 @@
+const ok_button = document.querySelector("#ok-button-holder button")
+
 function handle_graph_click(event) {
-    console.log("handled");
-    let xPosition = 0;
-    let yPosition = 0;
+    let x_pos = event.clientX + window.scrollX;
+    let y_pos = event.clientY + window.scrollY;
+    let element = document.getElementById("graph-holder");
+    let box = element.getBoundingClientRect()
+    let x_middle = element.clientWidth / 2 + box.left + window.scrollX;
+    let y_middle = element.clientHeight / 2 + box.top + window.scrollY;
 
-    let el = event.target;
-
-    while (el) {
-        if (el.tagName === "BODY") {
-            var xScrollPos = el.scrollLeft || document.documentElement.scrollLeft;
-            var yScrollPos = el.scrollTop || document.documentElement.scrollTop;
-            xPosition += (el.offsetLeft - xScrollPos + el.clientLeft);
-            yPosition += (el.offsetTop - yScrollPos + el.clientTop);
-        }
-        else {
-            xPosition += (el.offsetLeft - el.scrollLeft + el.clientLeft);
-            yPosition += (el.offsetTop - el.scrollTop + el.clientTop);
-        }
-
-        el = el.offsetParent;
+    let r_pixels = getR()
+    let r = parse_r_value();
+    if (isNaN(r)) alert("please define r")
+    else {
+        let x = (x_pos - x_middle) * r / r_pixels
+        let y = (y_middle - y_pos) * r / r_pixels
+        x_input.value = x
+        y_input.value = y
+        ok_button.click()
     }
-
-    console.log(xPosition + event.clientX, yPosition + event.clientY);
 }
