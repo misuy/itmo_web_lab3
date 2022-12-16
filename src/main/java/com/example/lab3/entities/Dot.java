@@ -8,7 +8,7 @@ import java.io.Serializable;
 public class Dot implements Serializable {
     private double x = 0;
     private double y = 0;
-    private double r = 0;
+    private double r = 1;
 
     public Dot() {}
 

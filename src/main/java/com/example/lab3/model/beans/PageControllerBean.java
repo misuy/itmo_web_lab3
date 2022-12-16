@@ -16,14 +16,10 @@ public class PageControllerBean implements Serializable {
     @ManagedProperty(value = "#{currentAttemptBean}")
     private CurrentAttemptBean currentAttemptBean;
 
-    @ManagedProperty(value = "#{focusedAttemptBean}")
-    private FocusedAttemptBean focusedAttemptBean;
-
     public void addCurrentAttempt() {
         long startOfProcessing = System.nanoTime();
         Attempt attempt = new Attempt(this.currentAttemptBean.getDot(), startOfProcessing);
         this.attemptsBean.addAttempt(attempt);
-        this.focusedAttemptBean.updateFocusedAttempt(attempt.getId());
     }
 
     public void setAttemptsBean(AttemptsBean attemptsBean) {
@@ -42,11 +38,4 @@ public class PageControllerBean implements Serializable {
         return this.currentAttemptBean;
     }
 
-    public void setFocusedAttemptBean(FocusedAttemptBean focusedAttemptBean) {
-        this.focusedAttemptBean = focusedAttemptBean;
-    }
-
-    public FocusedAttemptBean getFocusedAttemptBean() {
-        return this.focusedAttemptBean;
-    }
 }

@@ -3,35 +3,7 @@ const secondColor = "rgba(33, 150, 243, 0.7)"
 
 const stage = acgraph.create("graph-holder")
 
-const x_focused_input = document.querySelector("#hidden-focused-x-holder input")
-const y_focused_input = document.querySelector("#hidden-focused-y-holder input")
-const r_focused_input = document.querySelector("#hidden-focused-r-holder input")
-const result_focused_input = document.querySelector("#hidden-focused-result-holder input")
-
-const x_val = parse_x_val()
-const y_val = parse_y_val()
-const r_val = parse_r_val()
-const result_val = parse_result_val()
-
-function parse_x_val() {
-    if (x_focused_input != null) return parseFloat(x_focused_input.value)
-    return NaN
-}
-
-function parse_y_val() {
-    if (y_focused_input != null) return parseFloat(y_focused_input.value)
-    return NaN
-}
-
-function parse_r_val() {
-    if (r_focused_input != null) return parseFloat(r_focused_input.value)
-    return NaN
-}
-
-function parse_result_val() {
-    if (result_focused_input != null) return result_focused_input.value === "true";
-    return null
-}
+const attempts = []
 
 class Attempt {
     constructor(x, y, r, result) {
@@ -70,7 +42,6 @@ function drawCoordinates(stage, width, height, xMiddle, yMiddle, r) {
     linePath.moveTo(xMiddle - r / 40, yMiddle - r)
     linePath.lineTo(xMiddle + r / 40, yMiddle - r)
     stage.text(xMiddle + r / 40, yMiddle - r, "R", textStyle)
-
     linePath.moveTo(xMiddle - r / 40, yMiddle + r / 2)
     linePath.lineTo(xMiddle + r / 40, yMiddle + r / 2)
     stage.text(xMiddle + r / 40, yMiddle + r / 2, "-R/2", textStyle)
@@ -121,14 +92,11 @@ function drawShape(stage, width, height, xMiddle, yMiddle, r) {
 
 
 function drawAttempt(stage, width, height, xMiddle, yMiddle, r, result) {
-    console.log(result)
-    console.log(result.result)
     let color;
     if (result.result) color = "rgba(3, 252, 107, 1)"
     else color = "black"
     if (result !== 0) {
         stage.circle(xMiddle + (result.x / result.r) * r, yMiddle - (result.y / result.r) * r, 2).stroke(color).fill(color)
-        console.log("yep")
     }
 }
 
@@ -146,32 +114,34 @@ function plotGraph() {
     const yMiddle = height / 2
     const r = Math.min(width, height) * 0.4
 
-    console.log(width)
-    console.log(height)
-
     drawCoordinates(stage, width, height, xMiddle, yMiddle, r)
 
     drawShape(stage, width, height, xMiddle, yMiddle, r)
 
-    getAttempts()
-    drawAttempt(stage, width, height, xMiddle, yMiddle, r, getFocusedAttempt())
+    let focused_r = parse_r_value()
+
+    attempts.forEach(element => {
+        if (focused_r === element.r) drawAttempt(stage, width, height, xMiddle, yMiddle, r, element)
+    })
 }
 
-function getAttempts() {
-    let data = $("table.data-table tbody")
-    console.log(data)
-    for (let row in data.children()) {
-        console.log(row)
-    }
+function loadAttempts() {
+    $("table.data-table > tbody").each(function() {
+        let table = $(this)
+        let rows = table.children()
+        rows.each(function () {
+            let row = $(this)
+            let cells = row.children().children()
+            let attempt = new Attempt(parseFloat(cells.get(1).innerHTML), parseFloat(cells.get(2).innerHTML), parseFloat(cells.get(3).innerHTML), cells.get(4).innerHTML === "true")
+            attempts.push(attempt)
+        })
+    })
+    return attempts
 }
 
-function getFocusedAttempt() {
-    console.log(x_val, y_val, r_val, result_val)
-    if (!(isNaN(x_val) || isNaN(y_val) || isNaN(r_val))) return new Attempt(x_val, y_val, r_val, result_val)
-    else return 0
-}
 
 window.onload = function() {
+    loadAttempts()
     plotGraph();
     document.getElementById("graph-holder").addEventListener("click", handle_graph_click);
     stage.addEventListener("click", handle_graph_click)

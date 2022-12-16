@@ -24,7 +24,7 @@ public class AttemptsBean {
 
     @PostConstruct
     private void init() {
-        this.entityManager = Persistence.createEntityManagerFactory("local").createEntityManager();
+        this.entityManager = Persistence.createEntityManagerFactory("helios").createEntityManager();
         this.attemptsRepository = new AttemptsRepository(this.entityManager);
     }
 
